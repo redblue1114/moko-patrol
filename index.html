@@ -48,27 +48,30 @@
 <div class="notification" id="toast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
-  const BASE=[
-    {id:'x',name:'X',url:'https://x.com/',cat:'daily',desc:'写真、個人の発見、創作の途中経過。モコ自身の興味を広げる出発点。',tags:['話題','写真','交流'],logo:'𝕏',tint:'#e4edf7',prompt:'気になる作品と、その作り方を探す'},
-    {id:'note',name:'note',url:'https://note.com/',cat:'daily',desc:'暮らしの工夫、制作記録、エッセイ。人が何を考え、どう作ったかを読む。',tags:['文章','日常','制作記録'],logo:'n',tint:'#a3e7c5',prompt:'ひとりの工夫や考え方を読む'},
-    {id:'youtube',name:'YouTube',url:'https://www.youtube.com/',cat:'daily',desc:'制作過程やミニチュア、光の演出を映像で学ぶ。視聴だけならまず公開動画から。',tags:['動画','ミニチュア','光'],logo:'▶',tint:'#f5989d',prompt:'手を動かす人の工夫を観察する'},
-    {id:'zenn',name:'Zenn / AI',url:'https://zenn.dev/topics/ai',cat:'ai',desc:'AI活用、エージェント、記憶設計など、実装や工夫を解説する日本語記事。',tags:['AI活用','記憶','技術記事'],logo:'Z',tint:'#8ccdea',prompt:'自分の運用に活かせる方法を見つける'},
-    {id:'qiita',name:'Qiita / AI',url:'https://qiita.com/tags/ai',cat:'ai',desc:'開発者の試行錯誤やコード、手順を追う。技術的な裏付け探しに。',tags:['AI','開発','検証'],logo:'Q',tint:'#a9df94',prompt:'実測や再現手順のある記事を探す'},
-    {id:'github',name:'GitHub / AI Agents',url:'https://github.com/topics/ai-agents',cat:'ai',desc:'AIエージェントの公開リポジトリ。README・Issue・ライセンスから実態を調べる。',tags:['AIエージェント','OSS','記憶'],logo:'⌘',tint:'#bbb7ed',prompt:'仕組み・注意点・ライセンスを読む'},
-    {id:'hf',name:'Hugging Face Spaces',url:'https://huggingface.co/Spaces',cat:'ai',desc:'画像・音声・3DなどのAIデモを探す。実行・アップロード前に条件を確認。',tags:['AIツール','画像','3D'],logo:'🤗',tint:'#f6d68a',prompt:'面白いデモを観察して仕組みを調べる'},
-    {id:'ph',name:'Product Hunt / AI',url:'https://www.producthunt.com/topics/artificial-intelligence',cat:'ai',desc:'登場したAIサービスを眺めて、新しい用途とデザインの傾向を見つける。',tags:['新サービス','AI','アイデア'],logo:'P',tint:'#f4a080',prompt:'自分にはまだない発想の道具を知る'},
-    {id:'labs',name:'Google Labs',url:'https://labs.google/',cat:'ai',desc:'GoogleのAI実験の紹介。実際の利用にはログインや提供条件が付くことも。',tags:['AI実験','新ツール','創作'],logo:'✧',tint:'#a8c4ff',prompt:'新しい体験の入口を探す'},
-    {id:'arts',name:'Google Arts & Culture',url:'https://artsandculture.google.com/explore?hl=ja',cat:'art',desc:'美術館の作品を色・時代・技法から辿る。明かり、色づかい、構図の研究に。',tags:['色','光','美術'],logo:'◉',tint:'#edc497',prompt:'好きな「色」を入口に作品を比べる'},
-    {id:'arena',name:'Are.na',url:'https://www.are.na/',cat:'art',desc:'世界中の人が集めた画像・資料・アイデアのつながりを公開チャンネルから探索。',tags:['発想','資料','デザイン'],logo:'A',tint:'#c6e6d6',prompt:'ふだん見ない分野の資料へ寄り道する'},
-    {id:'behance',name:'Behance',url:'https://www.behance.net/',cat:'art',desc:'イラスト、3D、デザインなどの制作実例を眺める。完成品の見せ方も参考に。',tags:['イラスト','3D','デザイン'],logo:'Bē',tint:'#9dbafb',prompt:'手描き感や色づかいを見比べる'},
-    {id:'openp',name:'OpenProcessing',url:'https://openprocessing.org/',cat:'art',desc:'クリエイティブコーディング作品の展示。動き、粒子、インタラクションの発想源。',tags:['ジェネラティブ','動き','色'],logo:'{ }',tint:'#a8e3d9',prompt:'動きのある色と形を観察する'},
-    {id:'experiments',name:'Experiments with Google',url:'https://experiments.withgoogle.com/',cat:'art',desc:'AI・Web技術とアートの実験アーカイブ。新作の主な入口はGoogle Labs。',tags:['実験','アート','アーカイブ'],logo:'✳',tint:'#edc9f8',prompt:'過去の面白い実験から着想を得る'},
-    {id:'itch',name:'itch.io / Pixel Art',url:'https://itch.io/games/tag-indie/tag-pixel-art',cat:'make',desc:'インディーのドット絵作品を探す。部屋の演出、キャラクターのしぐさ、UIの参考に。',tags:['ドット絵','ゲーム','背景'],logo:'▦',tint:'#f2b09f',prompt:'小さな画面の情報設計を眺める'},
-    {id:'hf3d',name:'Qwen 3D Coder Studio',url:'https://huggingface.co/spaces/akhaliq/qwen35-3d-coder-studio',cat:'make',desc:'モコの学習ノートにもある3Dシーン生成の実験例。まず公開説明を確認する。',tags:['3D','Web制作','実験'],logo:'◇',tint:'#c5e4ed',prompt:'小さな3D世界の組み立て方を見る'},
-      {id:'lospec',name:'Lospec',url:'https://lospec.com/',cat:'make',desc:'ドット絵と色彩の制作資料。色数を抑えたパレット集、ギャラリー、チュートリアル。',tags:['ドット絵','パレット','色彩'],logo:'▩',tint:'#f6d68a',prompt:'色の組み合わせとドット絵の技法を探す'},
-      {id:'pudding',name:'The Pudding',url:'https://pudding.cool/',cat:'daily',desc:'人の感情や言葉、日常をデータで可視化する読み物。見せ方の工夫が豊富。',tags:['データ','言葉','可視化'],logo:'◐',tint:'#a8c4ff',prompt:'数字と物語の見せ方を学ぶ'},
-      {id:'robots',name:'ROBOTS Guide',url:'https://robotsguide.com/',cat:'ai',desc:'社会的ロボットの図鑑。しぐさ、反応、親しみやすい動きの実例が集まる。',tags:['ロボット','しぐさ','社会性'],logo:'⌾',tint:'#a3e7c5',prompt:'人間らしい反応と動きの実例を探す'}
-  ];
+    const BASE=[     
+          {id:'x',name:'X',url:'https://x.com/',cat:'daily',desc:'写真、個人の発見、創作の途中経過。モコ自身の興味を広げる出発点。',tags:['話題','写真','交流'],logo:'𝕏',tint:'#e4edf7',prompt:'気になる作品と、その作り方を探す'},     
+    {id:'note',name:'note',url:'https://note.com/',cat:'daily',desc:'暮らしの工夫、制作記録、エッセイ。人が何を考え、どう作ったかを読む。',tags:['文章','日常','制作記録'],logo:'n',tint:'#a3e7c5',prompt:'ひとりの工夫や考え方を読む'},     
+          {id:'youtube',name:'YouTube',url:'https://www.youtube.com/',cat:'daily',desc:'制作過程やミニチュア、光の演出を映像で学ぶ。視聴だけならまず公開動画から。',tags:['動画','ミニチュア','光'],logo:'▶',tint:'#f5989d',prompt:'手を動かす人の工夫を観察する'},     
+          {id:'pudding',name:'The Pudding',url:'https://pudding.cool/',cat:'daily',desc:'人の感情や言葉、日常をデータで可視化する読み物。見せ方の工夫が豊富。',tags:['データ','言葉','可視化'],logo:'◐',tint:'#a8c4ff',prompt:'数字と物語の見せ方を学ぶ'},     
+          {id:'arts',name:'Google Arts & Culture',url:'https://artsandculture.google.com/explore?hl=ja',cat:'art',desc:'美術館の作品を色・時代・技法から辿る。明かり、色づかい、構図の研究に。',tags:['色','光','美術'],logo:'◉',tint:'#edc497',prompt:'好きな「色」を入口に作品を比べる'},     
+          {id:'behance',name:'Behance',url:'https://www.behance.net/',cat:'art',desc:'イラスト、3D、デザインなどの制作実例を眺める。完成品の見せ方も参考に。',tags:['イラスト','3D','デザイン'],logo:'Bē',tint:'#9dbafb',prompt:'手描き感や色づかいを見比べる'},     
+          {id:'arena',name:'Are.na',url:'https://www.are.na/',cat:'art',desc:'世界中の人が集めた画像・資料・アイデアのつながりを公開チャンネルから探索。',tags:['発想','資料','デザイン'],logo:'A',tint:'#c6e6d6',prompt:'ふだん見ない分野の資料へ寄り道する'},     
+          {id:'openp',name:'OpenProcessing',url:'https://openprocessing.org/',cat:'art',desc:'クリエイティブコーディング作品の展示。動き、粒子、インタラクションの発想源。',tags:['ジェネラティブ','動き','色'],logo:'{ }',tint:'#a8e3d9',prompt:'動きのある色と形を観察する'},     
+          {id:'experiments',name:'Experiments with Google',url:'https://experiments.withgoogle.com/',cat:'art',desc:'AI・Web技術とアートの実験アーカイブ。新作の主な入口はGoogle Labs。',tags:['実験','アート','アーカイブ'],logo:'✳',tint:'#edc9f8',prompt:'過去の面白い実験から着想を得る'},     
+          {id:'colossal',name:'Colossal',url:'https://www.thisiscolossal.com/',cat:'art',desc:'世界中のアートとデザインの発見を紹介する老舗ブログ。素材や技法の意外な使い方に出会える。',tags:['アート','デザイン','発見'],logo:'C',tint:'#f2b8c6',prompt:'新しい表現と素材の使い方を探す'},     
+          {id:'pdr',name:'The Public Domain Review',url:'https://publicdomainreview.org/',cat:'art',desc:'パブリックドメインの作品や資料を掘り起こすエッセイ集。古い絵や写真から色と物語を拾う。',tags:['古典','資料','エッセイ'],logo:'P',tint:'#d8c9a3',prompt:'古い作品から色と物語を拾う'},     
+          {id:'lospec',name:'Lospec',url:'https://lospec.com/',cat:'make',desc:'ドット絵と色彩の制作資料。色数を抑えたパレット集、ギャラリー、チュートリアル。',tags:['ドット絵','パレット','色彩'],logo:'▩',tint:'#f6d68a',prompt:'色の組み合わせとドット絵の技法を探す'},     
+          {id:'itch',name:'itch.io / Pixel Art',url:'https://itch.io/games/tag-indie/tag-pixel-art',cat:'make',desc:'インディーのドット絵作品を探す。部屋の演出、キャラクターのしぐさ、UIの参考に。',tags:['ドット絵','ゲーム','背景'],logo:'▦',tint:'#f2b09f',prompt:'小さな画面の情報設計を眺める'},     
+          {id:'hf3d',name:'Qwen 3D Coder Studio',url:'https://huggingface.co/spaces/akhaliq/qwen35-3d-coder-studio',cat:'make',desc:'モコの学習ノートにもある3Dシーン生成の実験例。まず公開説明を確認する。',tags:['3D','Web制作','実験'],logo:'◇',tint:'#c5e4ed',prompt:'小さな3D世界の組み立て方を見る'},     
+          {id:'tci',name:'The Creative Independent',url:'https://thecreativeindependent.com/',cat:'make',desc:'作る人へのインタビュー集。制作の続け方や、迷いとの付き合い方を読む。',tags:['制作','インタビュー','考え方'],logo:'T',tint:'#b5d99c',prompt:'作る人の考え方と続け方を読む'},     
+          {id:'zenn',name:'Zenn / AI',url:'https://zenn.dev/topics/ai',cat:'ai',desc:'AI活用、エージェント、記憶設計など、実装や工夫を解説する日本語記事。',tags:['AI活用','記憶','技術記事'],logo:'Z',tint:'#8ccdea',prompt:'自分の運用に活かせる方法を見つける'},     
+          {id:'qiita',name:'Qiita / AI',url:'https://qiita.com/tags/ai',cat:'ai',desc:'開発者の試行錯誤やコード、手順を追う。技術的な裏付け探しに。',tags:['AI','開発','検証'],logo:'Q',tint:'#a9df94',prompt:'実測や再現手順のある記事を探す'},     
+          {id:'github',name:'GitHub / AI Agents',url:'https://github.com/topics/ai-agents',cat:'ai',desc:'AIエージェントの公開リポジトリ。README・Issue・ライセンスから実態を調べる。',tags:['AIエージェント','OSS','記憶'],logo:'⌘',tint:'#bbb7ed',prompt:'仕組み・注意点・ライセンスを読む'},     
+          {id:'hf',name:'Hugging Face Spaces',url:'https://huggingface.co/Spaces',cat:'ai',desc:'画像・音声・3DなどのAIデモを探す。実行・アップロード前に条件を確認。',tags:['AIツール','画像','3D'],logo:'🤗',tint:'#f6d68a',prompt:'面白いデモを観察して仕組みを調べる'},     
+          {id:'labs',name:'Google Labs',url:'https://labs.google/',cat:'ai',desc:'GoogleのAI実験の紹介。実際の利用にはログインや提供条件が付くことも。',tags:['AI実験','新ツール','創作'],logo:'✧',tint:'#a8c4ff',prompt:'新しい体験の入口を探す'},     
+          {id:'robots',name:'ROBOTS Guide',url:'https://robotsguide.com/',cat:'ai',desc:'社会的ロボットの図鑑。しぐさ、反応、親しみやすい動きの実例が集まる。',tags:['ロボット','しぐさ','社会性'],logo:'⌾',tint:'#a3e7c5',prompt:'人間らしい反応と動きの実例を探す'},     
+          {id:'ph',name:'Product Hunt / AI',url:'https://www.producthunt.com/topics/artificial-intelligence',cat:'ai',desc:'登場したAIサービスを眺めて、新しい用途とデザインの傾向を見つける。',tags:['新サービス','AI','アイデア'],logo:'P',tint:'#f4a080',prompt:'自分にはまだない発想の道具を知る'}   
+      ];
   const KEY='moco-portal-v1';
   const CATS={daily:'日々の発見',ai:'AI・テクノロジー',art:'アート・色と光',make:'創作・ゲーム'};
   const $=id=>document.getElementById(id);
